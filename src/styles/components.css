@@ -6,3 +6,52 @@
     height: 40px;
     border-radius: 20px;
 }
+
+.greeting-button {
+    max-width: 100%;
+    padding: 0;
+    border-radius: var(--radius-sm);
+    text-align: inherit;
+}
+
+.greeting-button h1 { margin-top: 0; }
+
+.name-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgba(0, 0, 0, .56);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.name-modal {
+    position: relative;
+    width: min(100%, 420px);
+    padding: 30px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: linear-gradient(155deg, rgba(255,255,255,.12), rgba(255,255,255,.04)), var(--graphite);
+    box-shadow: var(--lg-shadow);
+}
+
+.name-modal-kicker { margin: 0 0 8px; color: var(--muted); font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.name-modal h2 { margin: 0; font-family: var(--font-display); font-size: 28px; }
+.name-modal-copy { margin: 10px 0 24px; color: var(--muted); line-height: 1.5; }
+.name-modal label { display: block; margin-bottom: 8px; font-weight: 600; }
+.name-modal input { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius-sm); outline: none; background: var(--ink); color: var(--text); font: inherit; }
+.name-modal input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,255,255,.14); }
+.name-modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+.name-modal-skip, .name-modal-save, .name-modal-close { min-height: 40px; border-radius: var(--radius-pill); }
+.name-modal-skip { padding: 8px 12px; color: var(--muted); }
+.name-modal-save { padding: 8px 16px; background: var(--accent); color: var(--on-accent); font-weight: 600; }
+.name-modal-close { position: absolute; top: 12px; right: 12px; display: grid; width: 36px; place-items: center; color: var(--muted); }
+.name-modal-error { margin: 8px 0 0; color: #ff9ba8; font-size: 14px; }
+
+@media (max-width: 767px) {
+    .name-modal { padding: 26px 20px; }
+    .name-modal h2 { font-size: 25px; }
+}

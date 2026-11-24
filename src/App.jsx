@@ -1,5 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { useState } from 'react'
+import NameModal from './components/NameModal'
+import { USER_NAME_KEY } from './context/UserContext'
 import Home from './pages/Home';
 import Sidebar from './components/Sidebar';
 import BottomNav from './components/BottomNav';
@@ -25,6 +27,7 @@ import './styles/components.css'
 function App() {
   useGlassPointerGlow()
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [nameModalOpen, setNameModalOpen] = useState(() => localStorage.getItem(USER_NAME_KEY) === null)
 
 
   return (
@@ -52,6 +55,7 @@ function App() {
           </Routes>
         </main>
         <BottomNav />
+        <NameModal key={`onboarding-${nameModalOpen}`} open={nameModalOpen} onClose={() => setNameModalOpen(false)} />
       </div>
     </BrowserRouter>
   )

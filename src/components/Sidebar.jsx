@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { Bot, FolderOpen, Home, Image, MoreHorizontal, PackageOpen, PlusSquare } from "lucide-react";
 import "../styles/layout.css";
 
 const navItems = [
-    { label: "Home", href: "/" },
-    { label: "New chat", href: "/newchat" },
-    { label: "Images", href: "/images" },
-    { label: "Library", href: "/library" },
-    { label: "Plugins", href: "/plugins" },
-    { label: "Codex", href: "/codex" },
+    { label: "Home", href: "/", icon: Home },
+    { label: "New chat", href: "/newchat", icon: PlusSquare },
+    { label: "Images", href: "/images", icon: Image },
+    { label: "Library", href: "/library", icon: FolderOpen },
+    { label: "Plugins", href: "/plugins", icon: PackageOpen },
+    { label: "Codex", href: "/codex", icon: Bot },
 ];
 
 const moreSubcategories = [
@@ -130,7 +131,9 @@ export default function Sidebar({ drawerOpen = false, onClose = () => {} }) {
             <div className="mark" aria-hidden="true">
                 ChatGPT
             </div>
-            {navItems.map((item) =>
+            {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
                 item.href.startsWith("/") ?
                     <NavLink
                         to={item.href}
@@ -139,6 +142,7 @@ export default function Sidebar({ drawerOpen = false, onClose = () => {} }) {
                         end={item.href === "/"}
                         onClick={onClose}
                     >
+                        <Icon className="sidebar-icon" aria-hidden="true" />
                         <span>{item.label}</span>
                     </NavLink>
                     : <a
@@ -148,11 +152,13 @@ export default function Sidebar({ drawerOpen = false, onClose = () => {} }) {
                         target={item.href.startsWith("http") ? "_blank" : undefined}
                         rel={item.href.startsWith("http") ? "noreferrer" : undefined}
                     >
+                        <Icon className="sidebar-icon" aria-hidden="true" />
                         <span>{item.label}</span>
                     </a>
-            )}
+                );
+            })}
             <div className="build-filters" ref={menuRef}>
-                <button type="button" className="more-trigger" aria-expanded={moreOpen} aria-haspopup="menu" onClick={() => setMoreOpen((open) => !open)}>More...</button>
+                <button type="button" className="more-trigger" aria-expanded={moreOpen} aria-haspopup="menu" onClick={() => setMoreOpen((open) => !open)}><MoreHorizontal className="sidebar-icon" aria-hidden="true" /><span>More...</span></button>
                 {moreOpen && <div className="more-menu" role="menu" aria-label="More destinations">
                     {moreSubcategories.map((item) => <NavLink key={item.label} to={item.href} role="menuitem" className="more-menu-link" onClick={() => { setMoreOpen(false); onClose(); }}>{item.label}</NavLink>)}
                 </div>}

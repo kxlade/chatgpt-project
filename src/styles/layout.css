@@ -113,6 +113,13 @@
     flex: 0 0 auto;
 }
 
+.sidebar-icon {
+    width: 19px;
+    height: 19px;
+    flex: 0 0 19px;
+    stroke-width: 1.8;
+}
+
 .sidebar .mark {
     flex: 0 0 48px;
 }
@@ -198,6 +205,8 @@
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, .42);
     transition: color .2s ease, border-color .2s ease, transform .34s cubic-bezier(.2, .85, .25, 1.35), box-shadow .24s ease, filter .24s ease;
 }
+
+.more-trigger .sidebar-icon { margin-right: 8px; }
 
 /* recents list */
 .recents-list {
