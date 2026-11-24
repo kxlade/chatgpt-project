@@ -1,8 +1,2 @@
-const BottomNav = () => {
-    return (
-        <div>
-            
-        </div>
-    )
-}
+const BottomNav = () => null
 export default BottomNav

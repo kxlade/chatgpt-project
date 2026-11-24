@@ -1,5 +1,4 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { useState } from 'react';
 import Home from './pages/Home';
 import Sidebar from './components/Sidebar';
 import BottomNav from './components/BottomNav';
@@ -23,22 +22,11 @@ import './styles/components.css'
 function App() {
   useGlassPointerGlow()
 
-  const [active, setActive] = useState('All')
-  const [activeBuildFilter, setActiveBuildFilter] = useState(null)
-  
-  const changeCategory = (category) => {
-    setActive(category)
-    setActiveBuildFilter(null)
-  }
 
   return (
     <BrowserRouter>
       <div className="shell">
-        <Sidebar
-          active={active}
-          onChange={changeCategory}
-          activeBuildFilter={activeBuildFilter}
-          onBuildFilterChange={setActiveBuildFilter} />
+        <Sidebar />
         <main className="feed-col">
           <Routes>
             <Route index element={<Home />} />

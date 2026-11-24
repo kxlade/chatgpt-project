@@ -135,7 +135,7 @@ export default function Sidebar({ activeBuildFilter, onBuildFilterChange }) {
 
             <div className="recents-cont">
                 <h2>Recents</h2>
-                <ul className="recents_list">
+                <ul className="recents-list">
                     <li>JavaFX Setup Guide</li>
                     <li>Linux Setup Guide</li>
                     <li>PostGreSQL Wrap</li>

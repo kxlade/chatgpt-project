@@ -12,6 +12,7 @@
     position: sticky;
     top: 0;
     height: 100vh;
+    height: 100dvh;
     flex: 0 0 auto;
     flex-shrink: 0;
     display: flex;
@@ -195,11 +196,11 @@
 }
 
 /* recents list */
-.recents_list {
+.recents-list {
     list-style: circle;
 }
 
-.recents_list li{
+.recents-list li{
     cursor: pointer;
     transition: all 0.8s;
 
