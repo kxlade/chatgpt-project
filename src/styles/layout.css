@@ -173,15 +173,19 @@
 
 /* more */
 .build-filters {
+    position: relative;
     display: flex;
     gap: 8px;
-    overflow-x: auto;
+    overflow-x: visible;
     padding: 10px 16px;
     border-top: 1px solid var(--line);
     scrollbar-width: none;
 }
+.more-menu { position: absolute; inset-block-start: 100%; inset-inline-start: 16px; z-index: 30; display: grid; min-width: 160px; padding: 6px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--graphite); box-shadow: 0 12px 28px #0008; }
+.more-menu-link { padding: 10px 12px; border-radius: var(--radius-sm); }
+.more-menu-link:hover { background: var(--raised); }
 
-.build-filter {
+.more-trigger {
     position: relative;
     isolation: isolate;
     flex: 0 0 auto;
@@ -207,4 +211,47 @@
     &:hover{
         transform: scale(1.09);
     }
+}
+
+/* Dedicated touch layout; desktop rules above remain unchanged. */
+.mobile-topbar,
+.drawer-backdrop,
+.bottom-nav { display: none; }
+
+@media (max-width: 767px) {
+    html, body, #root { width: 100%; min-width: 0; min-height: 100%; overflow-x: clip; }
+    .shell { position: relative; display: block; width: 100%; min-height: 100vh; min-height: 100dvh; overflow-x: clip; }
+    .mobile-topbar { position: fixed; inset: 0 0 auto; z-index: 25; display: flex; height: calc(56px + env(safe-area-inset-top, 0px)); align-items: center; justify-content: space-between; padding: env(safe-area-inset-top, 0px) 12px 0; border-bottom: 1px solid var(--line); background: rgba(13, 14, 16, .84); -webkit-backdrop-filter: blur(20px) saturate(180%); backdrop-filter: blur(20px) saturate(180%); font-family: var(--font-display); font-size: 16px; font-weight: 700; }
+    .mobile-topbar-spacer { width: 44px; height: 44px; }
+    .mobile-menu-button { display: grid; width: 44px; height: 44px; flex: 0 0 44px; place-items: center; border-radius: 50%; }
+    .mobile-menu-button svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+    .sidebar { position: fixed; inset: 0 auto 0 0; z-index: 41; width: min(84vw, 320px) !important; height: 100vh; height: 100dvh; padding: calc(16px + env(safe-area-inset-top, 0px)) 14px calc(16px + env(safe-area-inset-bottom, 0px)); background: var(--ink); border-right: 1px solid var(--line); transform: translateX(-105%); transition: transform .25s ease; will-change: transform; overflow-y: auto; }
+    .sidebar.drawer-open { transform: translateX(0); }
+    .sidebar-resize-handle { display: none; }
+    .drawer-backdrop { position: fixed; inset: 0; z-index: 40; display: block; width: 100%; height: 100%; background: rgba(0, 0, 0, .58); opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+    .drawer-backdrop.is-open { opacity: 1; pointer-events: auto; }
+    .sidebar .nav-link { min-height: 48px; align-items: center; padding-inline: 12px; }
+    .build-filters { overflow: visible; padding: 8px 10px; }
+    .more-trigger { min-height: 44px; padding: 9px 14px; font-size: 15px; }
+    .more-menu { inset-inline-start: 10px; min-width: 190px; }
+    .more-menu-link { min-height: 44px; display: flex; align-items: center; }
+    .feed-col { width: 100%; min-height: 100vh; min-height: 100dvh; padding: calc(72px + env(safe-area-inset-top, 0px)) 16px calc(120px + env(safe-area-inset-bottom, 0px)); border: 0; overflow-x: clip; }
+    .home { padding-top: clamp(48px, 18vh, 150px); }
+    .home h1, .feed-col h1 { margin: 0 auto 28px; max-width: 100%; padding-inline: 8px; font-size: clamp(25px, 7vw, 34px); line-height: 1.15; overflow-wrap: anywhere; }
+    .chatbox { position: fixed; inset-inline: 12px; bottom: calc(82px + env(safe-area-inset-bottom, 0px)); z-index: 20; display: flex; justify-content: center; }
+    .chatbox .prompt { width: min(100%, 560px); min-height: 52px; height: auto; padding: 14px 18px; border: 1px solid var(--line); background: var(--graphite); color: var(--text); text-align: start; font: inherit; font-size: 16px; }
+    .bottom-nav { position: fixed; z-index: 30; inset: auto max(12px, env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left)); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: stretch; min-height: 64px; }
+    .bottom-nav a { display: flex; min-width: 44px; min-height: 52px; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 4px 2px; font-size: 11px; line-height: 1.1; }
+    .bottom-nav a svg { width: 21px; height: 21px; flex: none; }
+    .bottom-nav-lens { z-index: 0; transition: transform .35s cubic-bezier(.22, .9, .3, 1), width .25s ease, opacity .2s ease; }
+    .mobile-topbar, .sidebar, .drawer-backdrop, .bottom-nav, .chatbox { -webkit-tap-highlight-color: transparent; }
+}
+
+@media (hover: none), (pointer: coarse) {
+    .sidebar-resize-handle { display: none; }
+    .nav-link:hover, .more-trigger:hover, .more-menu-link:hover { transform: none; background: transparent; box-shadow: none; filter: none; }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+    .sidebar, .drawer-backdrop, .bottom-nav-lens { transition: none; }
 }

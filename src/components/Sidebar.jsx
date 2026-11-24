@@ -12,7 +12,6 @@ const navItems = [
 ];
 
 const moreSubcategories = [
-    { label: "More...", href: "" },
     { label: "Connectors", href: "/connectors" },
     { label: "Extensions", href: "/extensions" },
 ];
@@ -21,11 +20,43 @@ const MIN_WIDTH = 200;
 const MAX_WIDTH = 450;
 const DEFAULT_WIDTH = 260;
 
-export default function Sidebar({ activeBuildFilter, onBuildFilterChange }) {
+export default function Sidebar({ drawerOpen = false, onClose = () => {} }) {
     const [width, setWidth] = useState(DEFAULT_WIDTH);
     const [isDragging, setIsDragging] = useState(false);
     const [isSnapping, setIsSnapping] = useState(false);
     const dragStart = useRef({ x: 0, width: DEFAULT_WIDTH });
+    const [moreOpen, setMoreOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+    const menuRef = useRef(null);
+    const snapTimer = useRef(null);
+
+    useEffect(() => {
+        const media = window.matchMedia("(max-width: 767px)");
+        const updateMobile = () => setIsMobile(media.matches);
+        updateMobile();
+        media.addEventListener("change", updateMobile);
+        return () => media.removeEventListener("change", updateMobile);
+    }, []);
+
+    useEffect(() => {
+        const closeOutside = (event) => {
+            if (!menuRef.current?.contains(event.target)) setMoreOpen(false);
+        };
+        const closeEscape = (event) => {
+            if (event.key === "Escape") {
+                setMoreOpen(false);
+                onClose();
+            }
+        };
+        document.addEventListener("pointerdown", closeOutside);
+        document.addEventListener("keydown", closeEscape);
+        return () => {
+            document.removeEventListener("pointerdown", closeOutside);
+            document.removeEventListener("keydown", closeEscape);
+        };
+    }, [onClose]);
+
+    useEffect(() => () => window.clearTimeout(snapTimer.current), []);
 
     useEffect(() => {
         if (!isDragging) return undefined;
@@ -51,7 +82,8 @@ export default function Sidebar({ activeBuildFilter, onBuildFilterChange }) {
                 Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, currentWidth)),
             );
             setIsSnapping(true);
-            window.setTimeout(() => setIsSnapping(false), 400);
+            window.clearTimeout(snapTimer.current);
+            snapTimer.current = window.setTimeout(() => setIsSnapping(false), 400);
         };
 
         window.addEventListener("mousemove", handleMouseMove);
@@ -79,9 +111,13 @@ export default function Sidebar({ activeBuildFilter, onBuildFilterChange }) {
     };
 
     return (
+        <>
+        <button className={`drawer-backdrop${drawerOpen ? " is-open" : ""}`} type="button" aria-label="Close navigation menu" tabIndex={drawerOpen ? 0 : -1} onClick={onClose} />
         <nav
-            className={`sidebar${isDragging ? " is-dragging" : ""}`}
+            className={`sidebar${isDragging ? " is-dragging" : ""}${drawerOpen ? " drawer-open" : ""}`}
             aria-label="Main"
+            aria-hidden={isMobile && !drawerOpen}
+            inert={isMobile && !drawerOpen}
             style={{
                 width: `${width}px`,
                 flexBasis: `${width}px`,
@@ -101,6 +137,7 @@ export default function Sidebar({ activeBuildFilter, onBuildFilterChange }) {
                         key={item.label}
                         className="nav-link"
                         end={item.href === "/"}
+                        onClick={onClose}
                     >
                         <span>{item.label}</span>
                     </NavLink>
@@ -114,23 +151,11 @@ export default function Sidebar({ activeBuildFilter, onBuildFilterChange }) {
                         <span>{item.label}</span>
                     </a>
             )}
-            <div
-                className="build-filters"
-                role="group"
-                aria-label="Filter builds by type"
-            >
-                <select
-                    type="button"
-                    className="build-filter"
-                    aria-pressed={activeBuildFilter === null}
-                    onClick={() => onBuildFilterChange(null)}
-                >
-                    {moreSubcategories.map((forr) =>
-                        <option key={forr.label} value="" className="build-filter">
-                            {forr.label}
-                        </option>
-                    )}
-                </select>
+            <div className="build-filters" ref={menuRef}>
+                <button type="button" className="more-trigger" aria-expanded={moreOpen} aria-haspopup="menu" onClick={() => setMoreOpen((open) => !open)}>More...</button>
+                {moreOpen && <div className="more-menu" role="menu" aria-label="More destinations">
+                    {moreSubcategories.map((item) => <NavLink key={item.label} to={item.href} role="menuitem" className="more-menu-link" onClick={() => { setMoreOpen(false); onClose(); }}>{item.label}</NavLink>)}
+                </div>}
             </div>
 
             <div className="recents-cont">
@@ -157,5 +182,6 @@ export default function Sidebar({ activeBuildFilter, onBuildFilterChange }) {
                 onKeyDown={handleResizeKeyDown}
             />
         </nav>
+        </>
     );
 }

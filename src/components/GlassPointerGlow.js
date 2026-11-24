@@ -1,10 +1,12 @@
 import { useEffect } from 'react'
 
 // Buttons that get the light that follows your finger / cursor (see glass.css ::after)
-const GLOW_TARGETS = '.btn, .tab, .build-filter, .nav-link, .engagement-action, .about-back'
+const GLOW_TARGETS = '.btn, .more-trigger, .nav-link'
 
 export function useGlassPointerGlow() {
     useEffect(() => {
+        const pointer = window.matchMedia('(hover: hover) and (pointer: fine)')
+        if (!pointer.matches) return undefined
         const update = (event) => {
             const el = event.target instanceof Element ? event.target.closest(GLOW_TARGETS) : null
             if (!el) return
