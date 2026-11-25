@@ -1,11 +1,21 @@
-.prompt{
-    background: black;
-    color: azure;
-    text-align: center;
-    width: 250px;
-    height: 40px;
-    border-radius: 20px;
-}
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+.chatbox { display: flex; justify-content: center; width: min(100%, 680px); margin: 0 auto; }
+.composer-shell { position: relative; isolation: isolate; display: flex; align-items: flex-end; width: 100%; min-height: 58px; padding: 7px 8px; border: 1px solid var(--line); border-radius: 28px; background: linear-gradient(155deg, rgba(255,255,255,.055), rgba(255,255,255,.015) 46%, rgba(255,255,255,.035)), rgba(18,19,22,.94); -webkit-backdrop-filter: blur(20px) saturate(140%); backdrop-filter: blur(20px) saturate(140%); box-shadow: 0 12px 30px rgba(0,0,0,.34); transition: transform .25s var(--lg-smooth), border-color .25s ease, box-shadow .25s ease; }
+.composer-shell:focus-within { transform: translateY(-2px); border-color: rgba(174,187,208,.62); box-shadow: inset 0 0 20px rgba(174,187,208,.07), 0 16px 34px rgba(0,0,0,.42), 0 0 18px rgba(174,187,208,.13); }
+.chatbox :focus-visible { outline: none; }
+.composer-actions { display: flex; align-items: center; gap: 2px; flex: none; }
+.composer-actions-end { margin-left: 4px; }
+.composer-icon-button, .composer-send-button { display: grid; width: 42px; height: 42px; place-items: center; flex: 0 0 42px; border-radius: 50%; color: var(--muted); transition: transform .2s var(--lg-spring), color .2s ease, background .2s ease, box-shadow .2s ease; }
+.composer-icon-button svg, .composer-send-button svg { width: 19px; height: 19px; stroke-width: 1.8; }
+.composer-icon-button:hover, .composer-icon-button:focus-visible { color: var(--text); background: var(--hover-surface); transform: translateY(-1px); }
+.prompt { display: block; width: 100%; min-width: 0; max-height: 168px; padding: 10px 4px; border: 0; outline: 0; resize: none; overflow-y: auto; background: transparent; color: var(--text); font: inherit; font-size: 16px; line-height: 1.45; }
+.prompt::placeholder { color: var(--muted); }
+.composer-send-button { background: var(--accent); color: var(--on-accent); box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 4px 12px rgba(0,0,0,.28); }
+.composer-send-button:not(:disabled):hover, .composer-send-button:not(:disabled):focus-visible { transform: translateY(-1px) scale(1.04); box-shadow: inset 0 1px 0 rgba(255,255,255,1), 0 8px 16px rgba(0,0,0,.36); }
+.composer-send-button:disabled { cursor: not-allowed; opacity: .38; box-shadow: none; }
+
+@keyframes composer-rim { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 
 .greeting-button {
     max-width: 100%;
@@ -43,7 +53,7 @@
 .name-modal-copy { margin: 10px 0 24px; color: var(--muted); line-height: 1.5; }
 .name-modal label { display: block; margin-bottom: 8px; font-weight: 600; }
 .name-modal input { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius-sm); outline: none; background: var(--ink); color: var(--text); font: inherit; }
-.name-modal input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,255,255,.14); }
+.name-modal input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(174,187,208,.14); }
 .name-modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
 .name-modal-skip, .name-modal-save, .name-modal-close { min-height: 40px; border-radius: var(--radius-pill); }
 .name-modal-skip { padding: 8px 12px; color: var(--muted); }

@@ -2,15 +2,15 @@
 :root {
   --lg-spring: cubic-bezier(.34, 1.56, .64, 1);
   --lg-smooth: cubic-bezier(.22, .9, .3, 1);
-  --lg-fill: linear-gradient(155deg, rgba(255,255,255,.22), rgba(255,255,255,.07) 42%, rgba(255,255,255,.04) 62%, rgba(255,255,255,.14));
-  --lg-fill-strong: linear-gradient(155deg, rgba(255,255,255,.34), rgba(255,255,255,.13) 45%, rgba(255,255,255,.08) 62%, rgba(255,255,255,.24));
-  --lg-edge: inset 0 1px .5px rgba(255,255,255,.6), inset 0 -1px .5px rgba(255,255,255,.22), inset 1px 0 .5px rgba(255,255,255,.2), inset -1px 0 .5px rgba(255,255,255,.2);
-  --lg-glow: inset 0 0 14px rgba(255,255,255,.1), inset 0 6px 14px rgba(255,255,255,.06);
+  --lg-fill: linear-gradient(155deg, rgba(255,255,255,.075), rgba(255,255,255,.025) 42%, rgba(255,255,255,.015) 62%, rgba(255,255,255,.045));
+  --lg-fill-strong: linear-gradient(155deg, rgba(255,255,255,.12), rgba(255,255,255,.045) 45%, rgba(255,255,255,.025) 62%, rgba(255,255,255,.075));
+  --lg-edge: inset 0 1px .5px rgba(255,255,255,.16), inset 0 -1px .5px rgba(255,255,255,.07), inset 1px 0 .5px rgba(255,255,255,.06), inset -1px 0 .5px rgba(255,255,255,.06);
+  --lg-glow: inset 0 0 14px rgba(255,255,255,.025), inset 0 6px 14px rgba(255,255,255,.015);
   --lg-shadow: var(--lg-edge), var(--lg-glow), 0 10px 26px rgba(0,0,0,.38), 0 2px 5px rgba(0,0,0,.35);
   --lg-shadow-soft: var(--lg-edge), var(--lg-glow), 0 6px 16px rgba(0,0,0,.28);
   --lg-filter: blur(18px) saturate(190%);
 }
-body::after { content:''; position:fixed; inset:-20%; z-index:-1; pointer-events:none; background:radial-gradient(40% 35% at 15% 20%,rgba(90,120,255,.16),transparent 70%),radial-gradient(35% 30% at 85% 30%,rgba(190,90,255,.12),transparent 70%),radial-gradient(40% 35% at 60% 90%,rgba(40,200,170,.10),transparent 70%); }
+body::after { content:''; position:fixed; inset:-20%; z-index:-1; pointer-events:none; background:radial-gradient(40% 35% at 15% 20%,rgba(90,120,255,.055),transparent 70%),radial-gradient(35% 30% at 85% 30%,rgba(190,90,255,.04),transparent 70%),radial-gradient(40% 35% at 60% 90%,rgba(40,200,170,.035),transparent 70%); }
 .btn,.more-trigger,.nav-link,.bottom-nav,.bottom-nav-lens { position:relative; isolation:isolate; }
 .bottom-nav { position:fixed; inset:auto max(16px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left)); gap:0; padding:6px; border:0; border-radius:32px; background:linear-gradient(155deg,rgba(255,255,255,.16),rgba(255,255,255,.04) 45%,rgba(255,255,255,.09)),rgba(18,19,22,.5); -webkit-backdrop-filter:blur(30px) saturate(200%); backdrop-filter:blur(30px) saturate(200%); box-shadow:var(--lg-edge),inset 0 0 26px rgba(255,255,255,.07),0 20px 44px rgba(0,0,0,.55),0 4px 10px rgba(0,0,0,.4); }
 .bottom-nav-lens { position:absolute; top:0; left:0; z-index:2; opacity:0; pointer-events:none; border-radius:26px; will-change:transform; background:radial-gradient(70% 90% at 28% 0%,rgba(255,255,255,.42),transparent 70%),linear-gradient(165deg,rgba(255,255,255,.22),rgba(255,255,255,.06) 55%,rgba(255,255,255,.14)); -webkit-backdrop-filter:brightness(1.25) saturate(1.7); backdrop-filter:brightness(1.05) saturate(1.7); box-shadow:var(--lg-edge),inset 0 0 18px rgba(255,255,255,.2),0 8px 20px rgba(0,0,0,.4),0 2px 4px rgba(0,0,0,.3); transition:opacity .25s ease,filter .25s ease,box-shadow .25s ease; }

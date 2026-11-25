@@ -1,6 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Bot, FolderOpen, Home, Image, MoreHorizontal, PackageOpen, PlusSquare } from "lucide-react";
+import {
+    Bot,
+    FolderOpen,
+    Home,
+    Image,
+    MoreHorizontal,
+    PackageOpen,
+    PanelLeftClose,
+    PanelLeftOpen,
+    PlusSquare,
+} from "lucide-react";
 import "../styles/layout.css";
 
 const navItems = [
@@ -20,16 +30,19 @@ const moreSubcategories = [
 const MIN_WIDTH = 200;
 const MAX_WIDTH = 450;
 const DEFAULT_WIDTH = 260;
+const COLLAPSED_WIDTH = 68;
+const SIDEBAR_COLLAPSED_KEY = "chatgpt-sidebar-collapsed";
 
-export default function Sidebar({ drawerOpen = false, onClose = () => {} }) {
+export default function Sidebar({ drawerOpen = false, onClose = () => { } }) {
     const [width, setWidth] = useState(DEFAULT_WIDTH);
+    const [collapsed, setCollapsed] = useState(
+        () => localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "true",
+    );
     const [isDragging, setIsDragging] = useState(false);
-    const [isSnapping, setIsSnapping] = useState(false);
     const dragStart = useRef({ x: 0, width: DEFAULT_WIDTH });
     const [moreOpen, setMoreOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const menuRef = useRef(null);
-    const snapTimer = useRef(null);
 
     useEffect(() => {
         const media = window.matchMedia("(max-width: 767px)");
@@ -38,6 +51,10 @@ export default function Sidebar({ drawerOpen = false, onClose = () => {} }) {
         media.addEventListener("change", updateMobile);
         return () => media.removeEventListener("change", updateMobile);
     }, []);
+
+    useEffect(() => {
+        localStorage.setItem(SIDEBAR_COLLAPSED_KEY, String(collapsed));
+    }, [collapsed]);
 
     useEffect(() => {
         const closeOutside = (event) => {
@@ -56,8 +73,6 @@ export default function Sidebar({ drawerOpen = false, onClose = () => {} }) {
             document.removeEventListener("keydown", closeEscape);
         };
     }, [onClose]);
-
-    useEffect(() => () => window.clearTimeout(snapTimer.current), []);
 
     useEffect(() => {
         if (!isDragging) return undefined;
@@ -82,9 +97,6 @@ export default function Sidebar({ drawerOpen = false, onClose = () => {} }) {
             setWidth((currentWidth) =>
                 Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, currentWidth)),
             );
-            setIsSnapping(true);
-            window.clearTimeout(snapTimer.current);
-            snapTimer.current = window.setTimeout(() => setIsSnapping(false), 400);
         };
 
         window.addEventListener("mousemove", handleMouseMove);
@@ -98,7 +110,6 @@ export default function Sidebar({ drawerOpen = false, onClose = () => {} }) {
     const startResize = (event) => {
         event.preventDefault();
         dragStart.current = { x: event.clientX, width };
-        setIsSnapping(false);
         setIsDragging(true);
     };
 
@@ -113,81 +124,135 @@ export default function Sidebar({ drawerOpen = false, onClose = () => {} }) {
 
     return (
         <>
-        <button className={`drawer-backdrop${drawerOpen ? " is-open" : ""}`} type="button" aria-label="Close navigation menu" tabIndex={drawerOpen ? 0 : -1} onClick={onClose} />
-        <nav
-            className={`sidebar${isDragging ? " is-dragging" : ""}${drawerOpen ? " drawer-open" : ""}`}
-            aria-label="Main"
-            aria-hidden={isMobile && !drawerOpen}
-            inert={isMobile && !drawerOpen}
-            style={{
-                width: `${width}px`,
-                flexBasis: `${width}px`,
-                transition:
-                    isSnapping ?
-                        "width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), flex-basis 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-                        : "none",
-            }}
-        >
-            <div className="mark" aria-hidden="true">
-                ChatGPT
-            </div>
-            {navItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                item.href.startsWith("/") ?
-                    <NavLink
-                        to={item.href}
-                        key={item.label}
-                        className="nav-link"
-                        end={item.href === "/"}
-                        onClick={onClose}
-                    >
-                        <Icon className="sidebar-icon" aria-hidden="true" />
-                        <span>{item.label}</span>
-                    </NavLink>
-                    : <a
-                        href={item.href}
-                        key={item.label}
-                        className="nav-link"
-                        target={item.href.startsWith("http") ? "_blank" : undefined}
-                        rel={item.href.startsWith("http") ? "noreferrer" : undefined}
-                    >
-                        <Icon className="sidebar-icon" aria-hidden="true" />
-                        <span>{item.label}</span>
-                    </a>
-                );
-            })}
-            <div className="build-filters" ref={menuRef}>
-                <button type="button" className="more-trigger" aria-expanded={moreOpen} aria-haspopup="menu" onClick={() => setMoreOpen((open) => !open)}><MoreHorizontal className="sidebar-icon" aria-hidden="true" /><span>More...</span></button>
-                {moreOpen && <div className="more-menu" role="menu" aria-label="More destinations">
-                    {moreSubcategories.map((item) => <NavLink key={item.label} to={item.href} role="menuitem" className="more-menu-link" onClick={() => { setMoreOpen(false); onClose(); }}>{item.label}</NavLink>)}
-                </div>}
-            </div>
-
-            <div className="recents-cont">
-                <h2>Recents</h2>
-                <ul className="recents-list">
-                    <li>JavaFX Setup Guide</li>
-                    <li>Linux Setup Guide</li>
-                    <li>PostGreSQL Wrap</li>
-                </ul>
-            </div>
-
-            <div
-                className="sidebar-resize-handle"
-                role="separator"
-                aria-label="Resize navigation sidebar"
-                aria-orientation="vertical"
-                aria-valuemin={MIN_WIDTH}
-                aria-valuemax={MAX_WIDTH}
-                aria-valuenow={Math.round(
-                    Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, width)),
-                )}
-                tabIndex={0}
-                onMouseDown={startResize}
-                onKeyDown={handleResizeKeyDown}
+            <button
+                className={`drawer-backdrop${drawerOpen ? " is-open" : ""}`}
+                type="button"
+                aria-label="Close navigation menu"
+                tabIndex={drawerOpen ? 0 : -1}
+                onClick={onClose}
             />
-        </nav>
+            <nav
+                className={`sidebar${isDragging ? " is-dragging" : ""}${drawerOpen ? " drawer-open" : ""}${collapsed && !isMobile ? " is-collapsed" : ""}`}
+                aria-label="Main"
+                aria-hidden={isMobile && !drawerOpen}
+                inert={isMobile && !drawerOpen}
+                style={{
+                    "--sidebar-width": `${collapsed && !isMobile ? COLLAPSED_WIDTH : width}px`,
+                    width: `${collapsed && !isMobile ? COLLAPSED_WIDTH : width}px`,
+                    flexBasis: `${collapsed && !isMobile ? COLLAPSED_WIDTH : width}px`,
+                    transition: isDragging ? "none" : undefined,
+                }}
+            >
+                <div className="sidebar-header">
+                    <div className="mark" aria-label="ChatGPT">
+                        {collapsed && !isMobile ? "C" : "ChatGPT"}
+                    </div>
+                    {!isMobile && (
+                        <button
+                            type="button"
+                            className="sidebar-collapse-toggle"
+                            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                            aria-expanded={!collapsed}
+                            onClick={() => setCollapsed((value) => !value)}
+                        >
+                            {collapsed ?
+                                <PanelLeftOpen aria-hidden="true" />
+                                : <PanelLeftClose aria-hidden="true" />}
+                        </button>
+                    )}
+                </div>
+                {navItems.map((item) => {
+                    const Icon = item.icon;
+                    return item.href.startsWith("/") ?
+                        <NavLink
+                            to={item.href}
+                            key={item.label}
+                            className="nav-link"
+                            end={item.href === "/"}
+                            onClick={onClose}
+                        >
+                            <span className="nav-icon-wrap" data-tooltip={item.label}>
+                                <Icon className="sidebar-icon" aria-hidden="true" />
+                            </span>
+                            <span>{item.label}</span>
+                        </NavLink>
+                        : <a
+                            href={item.href}
+                            key={item.label}
+                            className="nav-link"
+                            target={item.href.startsWith("http") ? "_blank" : undefined}
+                            rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+                        >
+                            <span className="nav-icon-wrap" data-tooltip={item.label}>
+                                <Icon className="sidebar-icon" aria-hidden="true" />
+                            </span>
+                            <span>{item.label}</span>
+                        </a>;
+                })}
+                <div className="build-filters" ref={menuRef}>
+                    <button
+                        type="button"
+                        className="more-trigger"
+                        aria-label="More"
+                        aria-expanded={moreOpen}
+                        aria-haspopup="menu"
+                        onClick={() => setMoreOpen((open) => !open)}
+                    >
+                        <span className="nav-icon-wrap" data-tooltip="More">
+                            <MoreHorizontal className="sidebar-icon" aria-hidden="true" />
+                        </span>
+                        <span className="more-label">More...</span>
+                    </button>
+                    {moreOpen && (
+                        <div
+                            className="more-menu"
+                            role="menu"
+                            aria-label="More destinations"
+                        >
+                            {moreSubcategories.map((item) => (
+                                <NavLink
+                                    key={item.label}
+                                    to={item.href}
+                                    role="menuitem"
+                                    className="more-menu-link"
+                                    onClick={() => {
+                                        setMoreOpen(false);
+                                        onClose();
+                                    }}
+                                >
+                                    {item.label}
+                                </NavLink>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                <div className="recents-cont">
+                    <h2>Recents</h2>
+                    <ul className="recents-list">
+                        <li>JavaFX Setup Guide</li>
+                        <li>Linux Setup Guide</li>
+                        <li>PostGreSQL Wrap</li>
+                    </ul>
+                </div>
+
+                {!collapsed && (
+                    <div
+                        className="sidebar-resize-handle"
+                        role="separator"
+                        aria-label="Resize navigation sidebar"
+                        aria-orientation="vertical"
+                        aria-valuemin={MIN_WIDTH}
+                        aria-valuemax={MAX_WIDTH}
+                        aria-valuenow={Math.round(
+                            Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, width)),
+                        )}
+                        tabIndex={0}
+                        onMouseDown={startResize}
+                        onKeyDown={handleResizeKeyDown}
+                    />
+                )}
+            </nav>
         </>
     );
 }
